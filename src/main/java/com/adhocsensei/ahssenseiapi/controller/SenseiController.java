@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class SenseiController {
@@ -19,24 +20,27 @@ public class SenseiController {
     }
 
     @GetMapping("/senseiCourse/{id}")
-    public Sensei getASenseiCourse(@PathVariable Long id) {
-        return repo.getById(id);
+    public Optional<Sensei> getSenseiCourseById(@PathVariable Long id) {
+        return repo.findById(id);
     }
 
     @PostMapping("/senseiCourse")
-    public Sensei createASenseiCourse(@RequestBody Sensei sensei) {
+    public Sensei createSenseiCourse(@RequestBody Sensei sensei) {
         return repo.save(sensei);
     }
 
     @PutMapping("/senseiCourse/{id}")
-    public void updateASenseiCourse(@PathVariable Long id, @RequestBody Sensei sensei) {
-        sensei.setId(id);
-        repo.save(sensei);
+    public void updateSenseiCourseById(@PathVariable Long id, @RequestBody Sensei sensei) {
+        Optional<Sensei> optionalSensei = repo.findById(id);
+        if (optionalSensei.isPresent()) {
+            sensei.setId(id);
+            repo.save(sensei);
+        }
+//        catch error and have appropriate response
     }
 
     @DeleteMapping("/senseiCourse/{id}")
-    public void deleteASenseiCourse(@PathVariable Long id) {
+    public void deleteSenseiCourseById(@PathVariable Long id) {
         repo.deleteById(id);
     }
-
 }
