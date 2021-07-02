@@ -15,8 +15,19 @@ public class SenseiController {
     SenseiRepository repo;
 
     @GetMapping("/senseiCourse")
-    public List<Sensei> getAllSenseiCourses() {
+    public List<Sensei> getAllSenseiCourses(@RequestParam(required = false) Long userId,
+                                            @RequestParam(required = false) Long courseId) {
+        if (userId != null) {
+            return repo.findByUserId(userId);
+        } else if (courseId != null) {
+            return repo.findByCourseId(courseId);
+        } else
         return repo.findAll();
+    }
+
+    @GetMapping("/senseiCourse/senseiList/{id}")
+    public List<Sensei> getAllSenseiCoursesBySenseiId(@PathVariable Long id) {
+        return repo.findByUserId(id);
     }
 
     @GetMapping("/senseiCourse/{id}")
